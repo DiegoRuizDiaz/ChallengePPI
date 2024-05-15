@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using Services.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Utils.Responses;
+using Domain.Models;
 
 
 namespace APIRest.Controllers

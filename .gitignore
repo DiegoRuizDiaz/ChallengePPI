@@ -1,1 +1,18 @@
 .vs/
+
+# ApiRest
+/APIRest/.vs/
+/APIRest/bin/
+/APIRest/obj/
+
+/Domain/bin/
+/Domain/obj/
+
+/Repositories/bin/
+/Repositories/obj/
+
+/Services/bin/
+/Services/obj/
+
+/Utils/bin/
+/Utils/obj/

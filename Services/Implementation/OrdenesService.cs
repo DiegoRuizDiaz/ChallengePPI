@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Repositories.Entities;
+using Domain.Enums;
+using Domain.Models;
+using Domains.Entities;
 using Repositories.Interfaces;
 using Services.Interfaces;
-using Services.Models;
-using System.Drawing;
-using Utils.Enums;
 
 namespace Services.Implementation
 {

@@ -1,4 +1,4 @@
-﻿namespace Utils.Enums
+﻿namespace Domain.Enums
 {
     public enum OperacionEnum
     {

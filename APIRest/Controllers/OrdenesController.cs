@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Enums;
+using Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using Services.Models;
 using Swashbuckle.AspNetCore.Annotations;
-using Utils.Enums;
 using Utils.Responses;
 
 namespace APIRest.Controllers

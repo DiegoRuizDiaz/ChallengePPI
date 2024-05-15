@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
-using Repositories.Entities;
-using Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utils.Enums;
+using Domain.Enums;
+using Domain.Models;
+using Domains.Entities;
 
 namespace Services.Mapping
 {

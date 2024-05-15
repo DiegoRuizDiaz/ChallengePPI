@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Services.Models
+namespace Domain.Models
 {
     public class UsuarioDTO
     {

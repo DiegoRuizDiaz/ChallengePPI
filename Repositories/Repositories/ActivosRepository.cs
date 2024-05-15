@@ -1,5 +1,5 @@
-﻿using Repositories.Data;
-using Repositories.Entities;
+﻿using Domains.Entities;
+using Repositories.Data;
 using Repositories.Interfaces;
 
 namespace Repositories.Repositories

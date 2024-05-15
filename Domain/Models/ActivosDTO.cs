@@ -1,6 +1,7 @@
-﻿using Utils.Enums;
+﻿
+using Domain.Enums;
 
-namespace Services.Models
+namespace Domain.Models
 {
     public class ActivosDTO
     {

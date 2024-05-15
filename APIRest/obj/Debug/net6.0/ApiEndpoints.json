@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "usuarioDTO",
-        "Type": "Services.Models.UsuarioDTO",
+        "Type": "Domain.Models.UsuarioDTO",
         "IsRequired": true
       }
     ],
@@ -25,7 +25,7 @@
     "Parameters": [
       {
         "Name": "ordenReqDTO",
-        "Type": "Services.Models.OrdenesRequestDTO",
+        "Type": "Domain.Models.OrdenesRequestDTO",
         "IsRequired": true
       }
     ],
@@ -63,7 +63,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Services.Models.OrdenesDTO",
+        "Type": "Domain.Models.OrdenesDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -86,7 +86,7 @@
       },
       {
         "Name": "estado",
-        "Type": "Utils.Enums.EstadosEnum",
+        "Type": "Domain.Enums.EstadosEnum",
         "IsRequired": true
       }
     ],
@@ -102,7 +102,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[Services.Models.OrdenesDTO, Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[Domain.Models.OrdenesDTO, Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],

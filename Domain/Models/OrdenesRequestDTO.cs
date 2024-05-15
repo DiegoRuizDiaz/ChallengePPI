@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Domain.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Utils.Enums;
 
-namespace Services.Models
+namespace Domain.Models
 {
     public class OrdenesRequestDTO
     {

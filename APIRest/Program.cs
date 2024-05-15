@@ -1,19 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Repositories.Data;
-using Repositories.Interfaces;
-using Repositories.Repositories;
-using Services.Implementation;
-using Services.Interfaces;
-using Services.Mapping;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Reflection;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authorization;
-using Utils.Swagger;
-using Utils.Responses;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using APIRest.Helpers;
 using APIRest.Extensions;
 

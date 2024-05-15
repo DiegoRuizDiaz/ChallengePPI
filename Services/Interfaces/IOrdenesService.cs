@@ -1,5 +1,5 @@
-﻿using Services.Models;
-using Utils.Enums;
+﻿using Domain.Enums;
+using Domain.Models;
 
 namespace Services.Interfaces
 {

@@ -176,11 +176,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Diego\\source\\repos\\ChallengePPI\\Utils\\Utils.csproj",
+      "projectUniqueName": "C:\\Users\\Diego\\source\\repoPruebaSiFuncionaGIT\\ChallengePPI\\Utils\\Utils.csproj",
       "projectName": "Utils",
-      "projectPath": "C:\\Users\\Diego\\source\\repos\\ChallengePPI\\Utils\\Utils.csproj",
+      "projectPath": "C:\\Users\\Diego\\source\\repoPruebaSiFuncionaGIT\\ChallengePPI\\Utils\\Utils.csproj",
       "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Diego\\source\\repos\\ChallengePPI\\Utils\\obj\\",
+      "outputPath": "C:\\Users\\Diego\\source\\repoPruebaSiFuncionaGIT\\ChallengePPI\\Utils\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Diego\\AppData\\Roaming\\NuGet\\NuGet.Config",

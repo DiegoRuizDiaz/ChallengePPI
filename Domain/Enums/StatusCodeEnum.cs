@@ -1,4 +1,4 @@
-﻿namespace Utils.Enums
+﻿namespace Domains.Enums
 {
     public enum StatusCodeEnum
     {
@@ -9,6 +9,5 @@
         Unauthorized = 401,
         NotFound = 404,
         InternalError = 500
-
     }
 }
