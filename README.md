@@ -5,9 +5,16 @@ Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las 
 ## Instalacion
 Para poder operar con la API es necesario crear y configurar la conexion a la base de datos:
 
-1. Abrir el archivo "appsettings.json" en la raíz del proyecto.
+1. Abrir el archivo "appsettings.json" en la raíz del proyecto APIRest.
 2. Busque la sección "ConnectionStrings"
-3. Modifique la cadena de conexión "ConnectionString" según sea necesario para apuntar a su propia base de datos SQL Server. (Conexión,Servidor,Autenticación)
+3. Modifique la cadena de conexión "ConnectionString" según sea necesario para apuntar a su propia base de datos SQL Server. (Conexión,Servidor,Autenticación) ej:
+   
+   "ConnectionStrings": {
+   
+  "ConnectionString": "Server=nombre_de_su_servidor\\nombre_de_su_instancia;Database=INVERSION;Integrated Security=true"
+  
+}
+
 5. Ejecutar en la base SQL que usará, el script para la creación de la base de datos ubicado en ChallengePPI\DBScript\DB_Script.sql 
 
 ## Endpoints
