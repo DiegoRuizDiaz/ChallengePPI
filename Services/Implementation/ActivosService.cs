@@ -16,14 +16,9 @@ namespace Services.Implementation
             _mapper = mapper;
         }
 
-        public async Task<ActivosDTO?> GetById(int id)
+        public async Task<ActivosDTO?> GetByTicker(string ticker)
         {
-            var activo = await _iActivosRepository.GetById(id);
-
-            if (activo == null)
-            {
-                return null;
-            }
+            var activo = await _iActivosRepository.GetByTicker(ticker);
             return _mapper.Map<ActivosDTO>(activo);
         }
     }

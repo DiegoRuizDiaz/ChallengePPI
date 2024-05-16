@@ -1,4 +1,5 @@
 ﻿using Domains.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Data;
 using Repositories.Interfaces;
 
@@ -12,9 +13,9 @@ namespace Repositories.Repositories
             _context = context;
         }
 
-        public async Task<Activos?> GetById(int id)
+        public async Task<Activos?> GetByTicker(string ticker)
         {
-            return await _context.Activos.FindAsync(id);
+            return await _context.Activos.FirstOrDefaultAsync(a=> a.Ticker.ToUpper() == ticker.ToUpper());
         }
 
     }

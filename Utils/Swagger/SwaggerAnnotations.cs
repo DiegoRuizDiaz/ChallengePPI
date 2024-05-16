@@ -48,7 +48,8 @@ namespace Utils.Swagger
                 case "ActualizarOrden":
                     operation.Summary = "Actualizar orden";
                     operation.Description = "Actualiza el estado de una orden existente.";
-                    responses.Add("204", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[201] });
+                    responses.Add("204", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[204] });
+                    responses.Add("400", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[400] });
                     responses.Add("404", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[404] });
                     responses.Add("500", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[500] });
                 break;
@@ -58,6 +59,7 @@ namespace Utils.Swagger
                     operation.Description = "Crea una nueva orden.";
                     responses.Add("201", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[201] });
                     responses.Add("400", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[400] });
+                    responses.Add("404", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[404] });
                     responses.Add("500", new OpenApiResponse { Description = _customResponse.StatusCodeMessage[500] });
                 break;
 

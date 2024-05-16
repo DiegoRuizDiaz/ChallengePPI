@@ -78,6 +78,10 @@ namespace APIRest.Controllers
                 }
                 return NoContent();
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(_customResponse.StatusCodeMessage[400] + " : " + ex.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, _customResponse.StatusCodeMessage[500] + " " + ex.Message);
@@ -90,14 +94,18 @@ namespace APIRest.Controllers
         {
             try
             {
-                var ordenDTO = await this._iOrdenesService.Post(ordenReqDTO);
+                var orden = await this._iOrdenesService.Post(ordenReqDTO);
                              
-                if (ordenDTO == null)
+                if (orden == null)
                 {
-                    return NotFound(_customResponse.StatusCodeMessage[404]);
+                    return NotFound(_customResponse.StatusCodeMessage[404] + " : " + "No se ha encontrado un activo con el Ticker enviado.");
                 }   
 
-                return StatusCode(201, ordenDTO);
+                return StatusCode(201, orden);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(_customResponse.StatusCodeMessage[400] + " : " + ex.Message);
             }
             catch (Exception ex)
             {

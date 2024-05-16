@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Enums;
+using Domain.Interfaces;
 using Domain.Models;
 using Domains.Entities;
 using Repositories.Interfaces;
@@ -12,10 +13,6 @@ namespace Services.Implementation
         private readonly IOrdenesRepository _iOrdenesRepository;
         private readonly IActivosService _iActivosService;
         private readonly IMapper _mapper;
-
-        private const decimal COMISION_BONO = 0.002m;
-        private const decimal COMISION_ACCION = 0.006m;
-        private const decimal IMPUESTOS = 0.21m;
 
         public OrdenesService(IOrdenesRepository iOrdenesRepository, IActivosService iActivosService, IMapper mapper)
         {
@@ -41,9 +38,15 @@ namespace Services.Implementation
         {
             //Valido si la orden existe.
             var orden = await _iOrdenesRepository.GetByOrdenId(ordenId);
-            if(orden == null)
+            if (orden == null)
             {
                 return false;
+            }
+
+            //Valido que la orden este En Proceso.
+            if (orden.Estado != (int)EstadosEnum.EnProceso)
+            {
+                throw new InvalidOperationException("La orden ya fue Ejecutada o Cancelada.");
             }
 
             await _iOrdenesRepository.Update(ordenId, (int)estadoEnum);
@@ -52,22 +55,24 @@ namespace Services.Implementation
 
         public async Task<OrdenesDTO?> Post(OrdenesRequestDTO ordenReqDTO)
         {
-            //Valido si existe un activo con el IdCuenta enviado.
-            var activoOrdenDTO = await this._iActivosService.GetById((int)ordenReqDTO.IdCuenta);
-
-            if (activoOrdenDTO == null)
+            //Valido si existe un activo con el Ticker enviado.
+            var activoDTO = await this._iActivosService.GetByTicker(ordenReqDTO.Ticker);
+            if (activoDTO == null)
             {
                 return null;
             }
-            //Calcular Monto Total
-            var montoTotal = await SeteoMontoTotal(ordenReqDTO, activoOrdenDTO);
-              
-            //Construir OrdenDTO y mappear a Entidad.
-            var ordenDTO = ConstruirOrdenDTO(ordenReqDTO, activoOrdenDTO, montoTotal);
-            var orden = _mapper.Map<Ordenes>(ordenDTO);
+            //Calculo Monto Total
+            var montoTotal = await SeteoMontoTotal(ordenReqDTO, activoDTO);
 
-            orden = await _iOrdenesRepository.Post(orden);
-            return _mapper.Map<OrdenesDTO>(orden);            
+            //Preparo OrdenDTO y mappeo a la Entidad.
+            var ordenDTO = ConstruirOrdenDTO(ordenReqDTO, activoDTO, Math.Round(montoTotal,4));
+            var ordenToPost = _mapper.Map<Ordenes>(ordenDTO);
+
+            //Post
+            ordenToPost = await _iOrdenesRepository.Post(ordenToPost);
+
+            //Retorno la orden creada.
+            return _mapper.Map<OrdenesDTO>(ordenToPost);
         }
 
         public async Task<bool> Delete(int ordenId)
@@ -83,121 +88,58 @@ namespace Services.Implementation
         }
 
         //Metodos
-        public async Task<decimal> SeteoMontoTotal(OrdenesRequestDTO ordenReqDTO, ActivosDTO activoOrdenDTO)
+        public async Task<decimal> SeteoMontoTotal(OrdenesRequestDTO ordenReqDTO, ActivosDTO activoDTO)
         {
-            decimal montoTotal = 0;
-            try
+            IOrdenes orden = null;
+            switch (activoDTO.TipoActivo)
             {
-                //Logica para realizar los calculos del monto total dependiendo el tipo de activo.
-                switch (activoOrdenDTO.TipoActivo)
-                {
-                    case TiposActivosEnum.Accion:
-                        montoTotal = await this.CalcularMontoTotalAccion((int)ordenReqDTO.Cantidad, activoOrdenDTO.PrecioUnitario, COMISION_ACCION, IMPUESTOS);
-                        break;
+                case TiposActivosEnum.Accion:
+                    if (ordenReqDTO.Precio != null)
+                    {
+                        throw new InvalidOperationException("No se puede enviar un precio para el tipo de activo que intenta grabar.");
+                    }
 
-                    case TiposActivosEnum.Bono:
-                        montoTotal = await this.CalcularMontoTotalBono((int)ordenReqDTO.Cantidad, ordenReqDTO.Precio, COMISION_BONO, IMPUESTOS);
-                        break;
+                    orden = new Accion { Cantidad = ordenReqDTO.Cantidad, PrecioUnitario = activoDTO.PrecioUnitario };
+                break;
 
-                    case TiposActivosEnum.FCI:
-                        montoTotal = this.CalcularMontoTotalFCI((int)ordenReqDTO.Cantidad, ordenReqDTO.Precio);
-                        break;
-                }
+                case TiposActivosEnum.FCI:
+                    orden = new FCI { Cantidad = ordenReqDTO.Cantidad, PrecioUnitario = activoDTO.PrecioUnitario };
+                break;
 
-                if (montoTotal == 0)
-                {
-                    throw new ArgumentNullException("MontoTotal", "No se pudo calcular el Monto Total.");
-                }
+                case TiposActivosEnum.Bono:
+                    if (ordenReqDTO.Precio == null || ordenReqDTO.Precio <= 0)
+                    {
+                        throw new InvalidOperationException("El precio para este tipo de activo es requerido y no puede ser menor o igual a 0.");
+                    }
 
-                return montoTotal;
+                    orden = new Bono { Cantidad = ordenReqDTO.Cantidad, Precio = (decimal)ordenReqDTO.Precio };
+                break;
+
+                default:
+                break;
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            return orden.CalcularMontoTotal();
         }
-        public async Task<decimal> CalcularMontoTotalAccion(int cantidad, decimal precioUnitario, decimal comisionAccion, decimal impuesto)
+        
+        public OrdenesDTO ConstruirOrdenDTO(OrdenesRequestDTO ordenReqDTO, ActivosDTO activoDTO, decimal montoTotal)
         {
-            try
+            if (activoDTO.TipoActivo != TiposActivosEnum.Bono)
             {
-                decimal montoTotal = precioUnitario * cantidad;
-                decimal comisionEImpuestos = await this.CalcularComisionEImpuestos(montoTotal, comisionAccion, impuesto);
-                montoTotal = montoTotal + comisionEImpuestos;
+                ordenReqDTO.Precio = activoDTO.PrecioUnitario;
+            }
 
-                return montoTotal;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-        public async Task<decimal> CalcularMontoTotalBono(int cantidad, decimal precio, decimal comisionBono, decimal impuesto)
-        {
-            try
-            {
-                decimal montoTotal = cantidad * precio;
-                decimal comisionEImpuestos = await this.CalcularComisionEImpuestos(montoTotal, comisionBono, impuesto);
-
-                montoTotal = montoTotal + comisionEImpuestos;
-
-                return montoTotal;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-        public decimal CalcularMontoTotalFCI(int cantidad, decimal precio)
-        {
-            try
-            {
-                decimal montoTotal = cantidad * precio;
-                return montoTotal;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-        public async Task<decimal> CalcularComisionEImpuestos(decimal montoTotal, decimal comision, decimal impuesto)
-        {
-            try
-            {
-                //calculo comisiones sobre el monto total
-                decimal comisiones = montoTotal * comision;
-
-                //calculo impuestos sobre las comisiones
-                decimal impuestos = comisiones * impuesto;
-
-                //devuelvo la suma de ambos para luego cacular monto final.
-                decimal sumaFinal = comisiones + impuestos;
-                return sumaFinal;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-        public OrdenesDTO ConstruirOrdenDTO(OrdenesRequestDTO ordenReqDTO, ActivosDTO activoOrdenDTO, decimal montoTotal)
-        {
-            //Maximo 32 caracteres.
-            if (activoOrdenDTO.Nombre.Length > 32)
-            {
-                activoOrdenDTO.Nombre = activoOrdenDTO.Nombre.Substring(0, 32);
-            }
-            
-            //Instancio objeto OrdenDTO y asigno sus valores.
             return new OrdenesDTO
             {
                 IdCuenta = ordenReqDTO.IdCuenta,
+                IdActivo = activoDTO.Id,
+                NombreActivo = ordenReqDTO.NombreActivo,
                 Cantidad = ordenReqDTO.Cantidad,
-                Precio = Math.Round(ordenReqDTO.Precio, 4),
+                Precio = ordenReqDTO.Precio,
                 Operacion = ordenReqDTO.Operacion,
                 Estado = EstadosEnum.EnProceso,
-                NombreActivo = activoOrdenDTO.Nombre,
-                MontoTotal = Math.Round(montoTotal, 4)  //solo 4 decimales.
+                MontoTotal = montoTotal,
             };
-        }        
-
+        }
     }
 }

@@ -4,6 +4,6 @@ namespace Services.Interfaces
 {
     public interface IActivosService
     {
-        Task<ActivosDTO?> GetById(int id);
+        Task<ActivosDTO?> GetByTicker(string ticker);
     }
 }

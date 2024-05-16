@@ -13,8 +13,14 @@ namespace Repositories.Data
         public DbSet<Activos> Activos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Ordenes>().ToTable("Ordenes");
-            modelBuilder.Entity<Activos>().ToTable("Activos");
+            modelBuilder.Entity<Ordenes>().ToTable("Ordenes")
+                .Property(e => e.Precio).HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Ordenes>().ToTable("Ordenes")
+                .Property(e => e.MontoTotal).HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Activos>().ToTable("Activos")
+                .Property(e=> e.PrecioUnitario).HasColumnType("decimal(18,4)");
         }
 
     }
