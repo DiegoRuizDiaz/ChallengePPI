@@ -69,7 +69,7 @@ namespace APIRest.Extensions
             //Swagger
             services.AddSwaggerGen(s =>
             {
-                s.SwaggerDoc("v1", new OpenApiInfo { Title = "APIRest", Version = "v1" });
+                s.SwaggerDoc("v1", new OpenApiInfo { Title = "API Ordenes", Version = "v1",Description="Esta API permite al usuario leer, editar, crear y eliminar ordenes de inversión. Requiere Autenticarse."});
 
                 //Manejo las Annotations de Swagger con esta clase.
                 s.EnableAnnotations();

@@ -24,6 +24,12 @@ namespace Repositories.Repositories
             return await _context.Ordenes.FindAsync(ordenId);
         }
 
+        public async Task<Ordenes> Post(Ordenes orden)
+        {
+            await _context.Ordenes.AddAsync(orden);
+            await _context.SaveChangesAsync();
+            return orden;
+        }
         public async Task<Ordenes> Update(int ordenId, int estado)
         {
             var ordenToUpdate = await _context.Ordenes.FindAsync(ordenId);
@@ -31,13 +37,6 @@ namespace Repositories.Repositories
 
             await _context.SaveChangesAsync();
             return ordenToUpdate;
-        }
-
-        public async Task<Ordenes> Post(Ordenes orden)
-        {
-            await _context.Ordenes.AddAsync(orden);
-            await _context.SaveChangesAsync();
-            return orden;
         }
 
         public async Task<Ordenes> Delete(Ordenes orden)

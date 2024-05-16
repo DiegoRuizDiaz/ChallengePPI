@@ -34,25 +34,6 @@ namespace Services.Implementation
             return _mapper.Map<OrdenesDTO>(orden);
         }
 
-        public async Task<bool> Update(int ordenId, EstadosEnum estadoEnum)
-        {
-            //Valido si la orden existe.
-            var orden = await _iOrdenesRepository.GetByOrdenId(ordenId);
-            if (orden == null)
-            {
-                return false;
-            }
-
-            //Valido que la orden este En Proceso.
-            if (orden.Estado != (int)EstadosEnum.EnProceso)
-            {
-                throw new InvalidOperationException("La orden ya fue Ejecutada o Cancelada.");
-            }
-
-            await _iOrdenesRepository.Update(ordenId, (int)estadoEnum);
-            return true;
-        }
-
         public async Task<OrdenesDTO?> Post(OrdenesRequestDTO ordenReqDTO)
         {
             //Valido si existe un activo con el Ticker enviado.
@@ -73,6 +54,24 @@ namespace Services.Implementation
 
             //Retorno la orden creada.
             return _mapper.Map<OrdenesDTO>(ordenToPost);
+        }
+        public async Task<bool> Update(int ordenId, EstadosEnum estadoEnum)
+        {
+            //Valido si la orden existe.
+            var orden = await _iOrdenesRepository.GetByOrdenId(ordenId);
+            if (orden == null)
+            {
+                return false;
+            }
+
+            //Valido que la orden este En Proceso.
+            if (orden.Estado != (int)EstadosEnum.EnProceso)
+            {
+                throw new InvalidOperationException("La orden ya fue Ejecutada o Cancelada.");
+            }
+
+            await _iOrdenesRepository.Update(ordenId, (int)estadoEnum);
+            return true;
         }
 
         public async Task<bool> Delete(int ordenId)

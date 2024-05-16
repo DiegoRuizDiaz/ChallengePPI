@@ -12,12 +12,12 @@ namespace Domain.Models
         public int? IdCuenta { get; set; }
 
         [Required(ErrorMessage = "El campo Ticker es requerido.")]
-        [DefaultValue("AAPL")]
+        [DefaultValue("GD30")]
         public string Ticker { get; set; }
 
         [Required(ErrorMessage = "El campo Nombre Activo es requerido.")]
         [StringLength(32, ErrorMessage = "El Nombre Activo debe tener como maximo 32 caracteres.")]
-        [DefaultValue("Activo generado AAPL")]
+        [DefaultValue("Inversion en Bonos Globales")]
         public string? NombreActivo { get; set; }
 
         [Required(ErrorMessage = "El campo Cantidad es requerido.")]
@@ -25,7 +25,7 @@ namespace Domain.Models
         [Range(1, int.MaxValue, ErrorMessage = "El campo Cantidad no puede ser igual o menor a 0.")]
         public int Cantidad { get; set; }
 
-        [DefaultValue(20.56)]
+        [DefaultValue(1234.1234)]
         public decimal? Precio { get; set; }
 
         [Required(ErrorMessage = "El campo Operación es requerido.")]

@@ -23,7 +23,7 @@ namespace APIRest.Controllers
 
         //Comienzo Metodos CRUD
         [SwaggerOperation(OperationId = "ObtenerOrdenes")]
-        [HttpGet("ordenes")]
+        [HttpGet()]
         public async Task<ActionResult<List<OrdenesDTO>>> GetAll()
         {
             try
@@ -44,7 +44,7 @@ namespace APIRest.Controllers
         }
 
         [SwaggerOperation(OperationId = "ObtenerOrden")]    
-        [HttpGet("orden/{ordenId}")]
+        [HttpGet("{ordenId}")]
         public async Task<ActionResult<OrdenesDTO>> GetById([FromRoute] int ordenId)
         {
             try
@@ -61,6 +61,30 @@ namespace APIRest.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, _customResponse.StatusCodeMessage[500] + " " + ex.Message);
+            }
+        }
+        [SwaggerOperation(OperationId = "CrearOrden")]
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] OrdenesRequestDTO ordenReqDTO)
+        {
+            try
+            {
+                var orden = await this._iOrdenesService.Post(ordenReqDTO);
+
+                if (orden == null)
+                {
+                    return NotFound(_customResponse.StatusCodeMessage[404] + " : " + "No se ha encontrado un activo con el Ticker enviado.");
+                }
+
+                return StatusCode(201, orden);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(_customResponse.StatusCodeMessage[400] + " : " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, _customResponse.StatusCodeMessage[500] + " : " + ex.Message);
             }
         }
 
@@ -88,32 +112,6 @@ namespace APIRest.Controllers
             }
         }
 
-        [SwaggerOperation(OperationId = "CrearOrden")]
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] OrdenesRequestDTO ordenReqDTO)
-        {
-            try
-            {
-                var orden = await this._iOrdenesService.Post(ordenReqDTO);
-                             
-                if (orden == null)
-                {
-                    return NotFound(_customResponse.StatusCodeMessage[404] + " : " + "No se ha encontrado un activo con el Ticker enviado.");
-                }   
-
-                return StatusCode(201, orden);
-            }
-            catch(InvalidOperationException ex)
-            {
-                return BadRequest(_customResponse.StatusCodeMessage[400] + " : " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, _customResponse.StatusCodeMessage[500] + " : " + ex.Message);
-            }
-        }
-
-        
         [SwaggerOperation(OperationId = "EliminarOrden")]
         [HttpDelete("{ordenId}")]
         public async Task<ActionResult> Delete([FromRoute] int ordenId)

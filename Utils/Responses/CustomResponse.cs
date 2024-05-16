@@ -2,8 +2,7 @@
 {
     //Esta clase se utiliza para:
     //Manejar Respuestas HTTP.
-    //Devolver distintas excepciones en llamadas de operaciones como PUT o DELETE.
-    //El Dictionary se para la doc. de Swagger
+    //El Dictionary se usa para la doc. de Swagger
     public class CustomResponse
     {
         public Dictionary<int, string> StatusCodeMessage { get; set; }

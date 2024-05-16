@@ -7,8 +7,8 @@ namespace Services.Interfaces
     {
         Task<List<OrdenesDTO>> GetAll();
         Task<OrdenesDTO?> GetByOrdenId(int ordenId);
-        Task<bool> Update(int ordenId, EstadosEnum estadoEnum);
         Task<OrdenesDTO?> Post(OrdenesRequestDTO ordenReqDTO);
+        Task<bool> Update(int ordenId, EstadosEnum estadoEnum);
         Task<bool> Delete(int ordenId);
     }
 }
